@@ -21,7 +21,13 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader']
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+
+
+                ]
             },
 
 
@@ -35,38 +41,21 @@ module.exports = {
             },
             {
                 test: /\.(gif|png|jpe?g|svg)$/i,
-                use: [
-                    {loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                        },
-                    },
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {
-                            bypassOnDebug: true, //
-                            disable: true, //
-                        },
-                    },
-                ]
+                loader: 'svg-inline-loader'
             }
 
         ]
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: isDev ? 'style.[hash].css' : 'style.css'
+            filename: isDev ? 'style.css' : 'style.css'
         }),
         new webpack.DefinePlugin({
-            // добавляем общую переменную, которая будет содержать значение в переменной isDev
             isDev: JSON.stringify(isDev)
         }),
-        new HtmlWebpackPlugin({ // Добавляем новый плагин
+        new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html'
-        }),
-        new webpack.DefinePlugin({
-            isDev: JSON.stringify(isDev)
         }),
         new webpack.HotModuleReplacementPlugin()
     ],
