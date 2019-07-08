@@ -1,0 +1,15 @@
+{
+    "presets": [
+        [
+            "@babel/preset-react"
+        ],
+        "es2015",
+        "env",
+
+    ],
+    "plugins": [
+        "dynamic-import-webpack",
+        "transform-object-rest-spread",
+        "babel-plugin-transform-class-properties"
+    ]
+}
