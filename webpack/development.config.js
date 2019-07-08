@@ -4,36 +4,24 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
+
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
+
 module.exports = {
     mode: "development",
     devtool: 'source-map',
     entry: "./src/index.js",
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "dist")
+        path: path.resolve(__dirname, "../dist")
     },
 
     module: {
         rules: [
             {
-                test: /\.(css|scss)$/,
-                exclude: /node_modules/,
-                use: [
-                    {loader: 'style-loader', options: {sourceMap: true}},
-                    MiniCssExtractPlugin.loader,
-                    {
-                        loader: 'postcss-loader', options: {
-                            sourceMap: true,
-                            ident: 'postcss',
-                            plugins: [
-                                require('postcss-import')(),
-                                require('stylelint')(),
-                            ]
-                        }
-                    },
-                ]
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader']
             },
 
 
@@ -48,7 +36,18 @@ module.exports = {
             {
                 test: /\.(gif|png|jpe?g|svg)$/i,
                 use: [
-                    'url-loader?limit=2000&hash=sha512&digest=hex&name=[hash].[ext]'
+                    {loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                        },
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            bypassOnDebug: true, //
+                            disable: true, //
+                        },
+                    },
                 ]
             }
 
@@ -56,8 +55,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            loader: 'css-loader',
-            filename: 'style.[hash].css'
+            filename: isDev ? 'style.[hash].css' : 'style.css'
         }),
         new webpack.DefinePlugin({
             // добавляем общую переменную, которая будет содержать значение в переменной isDev
@@ -67,21 +65,17 @@ module.exports = {
             template: './src/index.html',
             filename: 'index.html'
         }),
+        new webpack.DefinePlugin({
+            isDev: JSON.stringify(isDev)
+        }),
         new webpack.HotModuleReplacementPlugin()
     ],
 
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.join(__dirname, '../dist'),
         compress: false,
         port: 9000,
-        clientLogLevel: 'silent',
-        color: true,
         hot: true,
-        headers: {
-            'X-Custom-Foo': 'bar'
-        }
-
-
     }
 
 };
