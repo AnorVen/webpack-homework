@@ -4,16 +4,23 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
 
 module.exports = {
     mode: "development",
     devtool: 'source-map',
-    entry: "./src/index.js",
+    entry: {
+        start: "./src/index.js",
+        add: './src/pages/add/index.js',
+        albums: './src/pages/albums/index.js',
+        tags: './src/pages/tags/index.js'
+    },
+
     output: {
-        filename: "bundle.js",
+        filename: "main.js",
+        chunkFilename: '[name].js',
         path: path.resolve(__dirname, "../dist")
     },
 
@@ -46,18 +53,45 @@ module.exports = {
 
         ]
     },
+    optimization: {
+        splitChunks: {
+            name: 'vendor',
+            chunks: 'all'
+        }
+    },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: isDev ? 'style.css' : 'style.css'
+            filename: isDev ? 'style.[hash].css' : 'style.css'
         }),
         new webpack.DefinePlugin({
             isDev: JSON.stringify(isDev)
         }),
+
+        new webpack.HotModuleReplacementPlugin(),
+
         new HtmlWebpackPlugin({
             template: './src/index.html',
-            filename: 'index.html'
+            filename: 'index.html',
+            chunks: ['start'] // здесь указываем какие части (chunks) нужны странице
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html',
+            chunks: ['add']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html',
+            chunks: ['albums']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html',
+            chunks: ['tags']
+        }),
+        new BundleAnalyzerPlugin(),
+
+
     ],
 
     devServer: {
