@@ -26,7 +26,6 @@ const Albums = Loadable({
 });
 
 
-
 class App extends React.PureComponent {
   render() {
     return (

@@ -12,14 +12,13 @@ module.exports = {
     mode: "development",
     devtool: 'source-map',
     entry: {
-        start: "./src/index.js",
         add: './src/pages/add/index.js',
         albums: './src/pages/albums/index.js',
         tags: './src/pages/tags/index.js'
     },
 
     output: {
-        filename: "main.js",
+        filename: "[name].js",
         chunkFilename: '[name].js',
         path: path.resolve(__dirname, "../dist")
     },
@@ -32,8 +31,6 @@ module.exports = {
                     MiniCssExtractPlugin.loader,
                     'css-loader',
                     'postcss-loader',
-
-
                 ]
             },
 
@@ -53,15 +50,10 @@ module.exports = {
 
         ]
     },
-    optimization: {
-        splitChunks: {
-            name: 'vendor',
-            chunks: 'all'
-        }
-    },
+
     plugins: [
         new MiniCssExtractPlugin({
-            filename: isDev ? 'style.[hash].css' : 'style.css'
+            filename: isDev ? 'style.[name].css' : 'style.css'
         }),
         new webpack.DefinePlugin({
             isDev: JSON.stringify(isDev)
@@ -69,11 +61,7 @@ module.exports = {
 
         new webpack.HotModuleReplacementPlugin(),
 
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html',
-            chunks: ['start'] // здесь указываем какие части (chunks) нужны странице
-        }),
+
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
@@ -93,6 +81,12 @@ module.exports = {
 
 
     ],
+    optimization: {
+        splitChunks: {
+            name: 'vendor',
+            chunks: 'all'
+        }
+    },
 
     devServer: {
         contentBase: path.join(__dirname, '../dist'),
