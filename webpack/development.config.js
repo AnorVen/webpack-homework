@@ -11,11 +11,7 @@ const isDev = env !== 'production';
 module.exports = {
     mode: "development",
     devtool: 'source-map',
-    entry: {
-        add: './src/pages/add/index.js',
-        albums: './src/pages/albums/index.js',
-        tags: './src/pages/tags/index.js'
-    },
+    entry: './src/index.js',
 
     output: {
         filename: "[name].js",
@@ -65,21 +61,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
-            chunks: ['add']
+            chunks: 'all'
         }),
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html',
-            chunks: ['albums']
-        }),
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html',
-            chunks: ['tags']
-        }),
-        new BundleAnalyzerPlugin(),
-
-
     ],
     optimization: {
         splitChunks: {
@@ -92,6 +75,7 @@ module.exports = {
         contentBase: path.join(__dirname, '../dist'),
         compress: false,
         port: 9000,
+        historyApiFallback: true,
         hot: true,
     }
 

@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
-
-//import Albums from './pages/albums'
-//import Tags from './pages/tags'
-//import Add from './pages/add'
+/*
+import Albums from './pages/albums'
+import Tags from './pages/tags'
+import Add from './pages/add'*/
 
 import Header from './components/Header'
 import Content from './components/Content'
